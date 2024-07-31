@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,18 +7,21 @@ import { ExternalLink, Loader2 } from "lucide-react";
 
 const EventCard = ({
     isPublished,
-    cancelLoading,
+
     handleCancel,
     handleConfirm,
-    publishLoading,
+
     eventId,
     image,
     title,
     status,
     description,
-    mail,
+    date,
     selectedService,
 }) => {
+    const [cancelLoading, setCancelLoading] = useState(false);
+
+    const [publishLoading, setPublishLoading] = useState(false);
     return (
         <div className="flex group   ">
             <Card className="w-[350px] overflow-hidden pt-5  bg-muted ">
@@ -41,6 +44,12 @@ const EventCard = ({
                     </div>
 
                     <p className="mt-4 line-clamp-1">Title : {title}</p>
+                    <p className="  line-clamp-1">
+                        Date :{" "}
+                        {date[0].split("T")[0] +
+                            " -- " +
+                            date[date.length - 1].split("T")[0]}
+                    </p>
                     <p className="line-clamp-1">Description : {description}</p>
                     {/* <p className="line-clamp-1">Mail : {mail}</p> */}
                     <p className="mb-4 line-clamp-1">Status : {status}</p>
@@ -59,7 +68,12 @@ const EventCard = ({
                                 <>
                                     {" "}
                                     <Button
-                                        onClick={() => handleCancel(eventId)}
+                                        onClick={() =>
+                                            handleCancel(
+                                                eventId,
+                                                setCancelLoading
+                                            )
+                                        }
                                         variant="destructive"
                                     >
                                         {cancelLoading ? (
@@ -82,7 +96,12 @@ const EventCard = ({
                             {status.toLowerCase() === "confirmed" &&
                                 !isPublished && (
                                     <Button
-                                        onClick={() => handleConfirm(eventId)}
+                                        onClick={() =>
+                                            handleConfirm(
+                                                eventId,
+                                                setPublishLoading
+                                            )
+                                        }
                                     >
                                         {publishLoading ? (
                                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

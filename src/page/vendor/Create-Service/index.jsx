@@ -29,7 +29,7 @@ const ClientServices = () => {
     const [description, setDescription] = useState(editItem?.description || "");
     const [contactInfo, setContactInfo] = useState(editItem?.contactInfo || "");
     const [price, setPrice] = useState(editItem?.price || 0);
-    const [image, setImage] = useState(editItem?.images || null);
+    const [image, setImage] = useState(editItem?.images[0] || null);
 
     //catring
     const [menuOptions, setMenuOptions] = useState(editItem?.menuOptions || []);
@@ -42,7 +42,9 @@ const ClientServices = () => {
     const [capacity, setCapacity] = useState(editItem?.capacity || 0);
 
     //decoration
-    const [decorationImages, setDecorationImages] = useState([]);
+    const [decorationImages, setDecorationImages] = useState(
+        editItem?.decorationImages || []
+    );
     const [newDecorationImages, setNewDecorationImages] = useState([]);
 
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -63,6 +65,59 @@ const ClientServices = () => {
     // };
 
     const handleSubmit = async () => {
+        if (!name.trim()) {
+            return toast({
+                variant: "destructive",
+                title: "Name is required.",
+            });
+        } else if (!description.trim()) {
+            return toast({
+                variant: "destructive",
+                title: "Description is required.",
+            });
+        } else if (isNaN(price) || price <= 0) {
+            return toast({
+                variant: "destructive",
+                title: "Enter a valid number for Price.",
+            });
+        } else if (
+            client?.role?.type.toLowerCase() === "catering" &&
+            !menuOptions
+        ) {
+            return toast({
+                variant: "destructive",
+                title: "Menu Options are required for Catering.",
+            });
+        } else if (client?.role?.type.toLowerCase() === "venue") {
+            if (!location.trim()) {
+                return toast({
+                    variant: "destructive",
+                    title: "Location is required for Venue.",
+                });
+            } else if (!capacity || isNaN(capacity) || capacity <= 0) {
+                return toast({
+                    variant: "destructive",
+                    title: "Enter a valid number for Capacity.",
+                });
+            }
+        } else if (
+            client?.role?.type.toLowerCase() === "photograph" &&
+            !portfolio
+        ) {
+            return toast({
+                variant: "destructive",
+                title: "Portfolio is required for Photography.",
+            });
+        } else if (
+            client?.role?.type.toLowerCase() === "decoration" &&
+            !decorationImages
+        ) {
+            return toast({
+                variant: "destructive",
+                title: "Decoration Images are required.",
+            });
+        }
+        // All required fields are valid, prepare the data and proceed
         const data = {
             name,
             description,
@@ -73,6 +128,7 @@ const ClientServices = () => {
             clientId: client._id,
             dates: client.availability,
         };
+        console.log(data);
 
         if (client?.role?.type.toLowerCase() === "catering") {
             data.menuOptions = menuOptions;
@@ -82,10 +138,7 @@ const ClientServices = () => {
         } else if (client?.role?.type.toLowerCase() === "photograph") {
             data.portfolio = portfolio;
         } else if (client?.role?.type.toLowerCase() === "decoration") {
-            console.log(newDecorationImages);
-            data.decorationImages = newDecorationImages.length
-                ? newDecorationImages
-                : decorationImages;
+            data.decorationImages = decorationImages;
         }
 
         try {
@@ -101,7 +154,7 @@ const ClientServices = () => {
                         },
                     })
                     .then((res) => {
-                        navigate("/vendor/dashboard");
+                        navigate("/vendor/profile");
                     })
                     .catch((err) => console.log(err));
             } else {
@@ -114,7 +167,7 @@ const ClientServices = () => {
                     })
                     .then((res) => {
                         dispatch(addItem(res.data.newItem));
-                        navigate("/vendor/dashboard");
+                        navigate("/vendor/profile");
                     })
                     .catch((err) => console.log(err));
             }
@@ -165,12 +218,14 @@ const ClientServices = () => {
                             title={"Image"}
                             value={editItem?.images}
                             setValue={setImage}
+                            setLoading={setLoading}
                         />
                     ) : (
                         <ClientInputImage
                             title={"Image"}
                             value={image}
                             setValue={setImage}
+                            setLoading={setLoading}
                         />
                     )}
                 </div>
@@ -200,15 +255,15 @@ const ClientServices = () => {
                     {client?.role?.type.toLowerCase() === "decoration" &&
                         (ID && editItem ? (
                             <DecorationServiceEdit
-                                images={editItem?.decorationImages}
+                                images={decorationImages}
                                 setImages={setDecorationImages}
-                                newDecorationImages={newDecorationImages}
-                                setNewDecorationImages={setNewDecorationImages}
+                                setIsLoading={setLoading}
                             />
                         ) : (
                             <DecorationService
                                 images={decorationImages}
                                 setImages={setDecorationImages}
+                                setIsLoading={setLoading}
                             />
                         ))}
                 </div>
@@ -216,12 +271,15 @@ const ClientServices = () => {
             <div className="flex justify-center mt-10">
                 <Button
                     className="w-fit mx-auto px-10 py-[10px]"
-                    onClick={handleSubmit}
+                    onClick={() => {
+                        if (loading) return;
+                        return handleSubmit();
+                    }}
                 >
                     {loading ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : ID ? (
-                        "Edit"
+                        "Save"
                     ) : (
                         "Create"
                     )}

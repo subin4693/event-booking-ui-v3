@@ -7,12 +7,13 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { Loader2 } from "lucide-react";
 const EditEvents = () => {
     const [services, setServices] = useState();
     const [selectedService, setSelectedService] = useState(null);
     const [bookings, setBookings] = useState([]);
     const [showTitleField, setShowTitleField] = useState(true);
-
+    const [loading, setLoading] = useState(false);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [image, setImage] = useState(null);
@@ -21,6 +22,8 @@ const EditEvents = () => {
     const [catering, setCatering] = useState({});
     const [photograph, setPhotograph] = useState({});
     const [decoration, setDecoration] = useState({});
+
+    const [initLoading, setInitLoading] = useState(false);
 
     const [date, setDate] = useState();
     const [tempDate, setTempDate] = useState(new Date());
@@ -128,6 +131,7 @@ const EditEvents = () => {
 
     const handleCreateEvent = async () => {
         try {
+            setLoading(true);
             const data = {
                 userId: user.id,
                 name: title,
@@ -157,23 +161,21 @@ const EditEvents = () => {
                 .catch((err) => console.log(err));
         } catch (error) {
             console.error("Error creating event:", error);
+        } finally {
+            setLoading(false);
         }
     };
     useEffect(() => {
         const getData = async () => {
             try {
+                setInitLoading(true);
                 const res = await axios.get(
                     BASE_URL + "/events/single-event/" + eventId
                 );
-                const ress = await axios.get(BASE_URL + "/types");
-
-                setServices(ress.data.types);
-
-                setSelectedService(ress.data.types[0]);
 
                 let { photograph, venue, decoration, catering, event } =
                     res.data.data;
-                console.log(res.data.data);
+
                 setTitle(event?.details?.name);
 
                 setImage(event?.details?.images);
@@ -203,6 +205,8 @@ const EditEvents = () => {
                 });
             } catch (error) {
                 console.log(error);
+            } finally {
+                setInitLoading(false);
             }
         };
         getData();
@@ -255,6 +259,8 @@ const EditEvents = () => {
         <div className="min-h-screen flex flex-col justify-between ">
             {showTitleField && (
                 <EventTitle
+                    iosdate={date}
+                    initLoading={initLoading}
                     setShowTitleField={setShowTitleField}
                     title={title}
                     setTitle={setTitle}
@@ -280,12 +286,16 @@ const EditEvents = () => {
                 />
             </div>
             {bookings?.length > 0 && (
-                <div className="sticky bottom-0 flex justify-center backdrop-blur  z-50 p-4">
+                <div className="sticky bottom-0 flex justify-center backdrop-blur  z-10 p-4">
                     <Button
                         className="px-4 py-2 text-white rounded"
                         onClick={handleCreateEvent}
                     >
-                        {bookings.length} Update
+                        {loading ? (
+                            <Loader2 className=" h-4 w-4 animate-spin mx-10" />
+                        ) : (
+                            <> Update</>
+                        )}
                     </Button>
                 </div>
             )}

@@ -15,7 +15,7 @@ const Events = () => {
     useEffect(() => {
         const getEvents = async () => {
             try {
-                setLoading(false);
+                setLoading(true);
 
                 const res = await axios.get(BASE_URL + "/events");
 
@@ -23,6 +23,7 @@ const Events = () => {
             } catch (error) {
                 console.log(error);
             } finally {
+                console.log("finally worked");
                 setLoading(false);
             }
         };
@@ -74,22 +75,29 @@ const Events = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5 mt-10">
                 {!loading ? (
-                    events &&
-                    events[event] &&
-                    events[event]?.map(({ item }) => {
-                        console.log(item);
-                        return (
-                            <EventCard
-                                key={item && item?._id}
-                                id={item && item?._id}
-                                image={item && item?.images}
-                                title={item && item?.name}
-                                date={item && item?.dates}
-                            />
-                        );
-                    })
+                    events && events[event]?.length !== 0 ? (
+                        events[event]?.map(({ item }) => {
+                            return (
+                                <EventCard
+                                    key={item && item?._id}
+                                    id={item && item?._id}
+                                    image={item && item?.images}
+                                    title={item && item?.name}
+                                    date={item && item?.dates}
+                                />
+                            );
+                        })
+                    ) : (
+                        <div>There is no {event} events</div>
+                    )
                 ) : (
-                    <Skeleton className="  rounded-2xl h-[250px]" />
+                    <>
+                        <Skeleton className="  rounded-2xl h-[250px]   " />
+
+                        <Skeleton className="  rounded-2xl h-[250px]   " />
+
+                        <Skeleton className="  rounded-2xl h-[250px] " />
+                    </>
                 )}
             </div>
         </div>

@@ -31,11 +31,24 @@ const ServiceDetails = ({
                         <DialogTitle>Name : {singleService?.name}</DialogTitle>
                         <DialogDescription className="text-justify  text-lg ">
                             {singleService?.description && (
-                                <>Description : {singleService?.description}</>
+                                <>
+                                    {" "}
+                                    <p className="  line-clamp-4 ">
+                                        <strong className="text-white/80">
+                                            Description
+                                        </strong>{" "}
+                                        : {singleService?.description}
+                                    </p>
+                                </>
                             )}
-                            <br />
+
                             {singleService?.price && (
-                                <>Cost : {singleService?.price}</>
+                                <>
+                                    <strong className="text-white/80">
+                                        Cost :{" "}
+                                    </strong>{" "}
+                                    {singleService?.price}
+                                </>
                             )}
                         </DialogDescription>
                     </DialogHeader>

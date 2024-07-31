@@ -22,7 +22,6 @@ const EventCard = ({
     name,
     date,
 }) => {
-    console.log(date);
     if (!isOpen) return null;
 
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -71,9 +70,13 @@ const EventCard = ({
                                     <>
                                         <Button
                                             variant="destructive"
-                                            onClick={() =>
-                                                handleReject(bookingId, index)
-                                            }
+                                            onClick={() => {
+                                                if (rejectLoading) return;
+                                                return handleReject(
+                                                    bookingId,
+                                                    index
+                                                );
+                                            }}
                                         >
                                             {rejectLoading ? (
                                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -83,9 +86,13 @@ const EventCard = ({
                                         </Button>{" "}
                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                         <Button
-                                            onClick={() =>
-                                                handleConfirm(bookingId, true)
-                                            }
+                                            onClick={() => {
+                                                if (confirmLoading) return;
+                                                return handleConfirm(
+                                                    bookingId,
+                                                    true
+                                                );
+                                            }}
                                         >
                                             {confirmLoading ? (
                                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -99,9 +106,13 @@ const EventCard = ({
                                     <>
                                         <Button
                                             variant="destructive"
-                                            onClick={() =>
-                                                handleReject(bookingId, index)
-                                            }
+                                            onClick={() => {
+                                                if (rejectLoading) return;
+                                                return handleReject(
+                                                    bookingId,
+                                                    index
+                                                );
+                                            }}
                                         >
                                             {rejectLoading ? (
                                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

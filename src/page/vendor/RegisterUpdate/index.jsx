@@ -22,10 +22,10 @@ const Register = () => {
     const name = user?.name?.split(" ");
 
     const [firstName, setFirstName] = useState(
-        (name[0] && name[0]) || client?.firstName || "",
+        (name[0] && name[0]) || client?.firstName || ""
     );
     const [lastName, setLastName] = useState(
-        (name[1] && name[1]) || client?.lastName || "",
+        (name[1] && name[1]) || client?.lastName || ""
     );
     const [email, setEmail] = useState(user?.email || client?.email || "");
     const [experience, setExperience] = useState(client?.workExperience || "");
@@ -45,20 +45,81 @@ const Register = () => {
     const { toast } = useToast();
 
     const handleSubmit = async () => {
+        const trimmedFirstName = firstName?.trim();
+        const trimmedLastName = lastName?.trim();
+        const trimmedEmail = email?.trim();
+        const trimmedRole = role?.trim();
+        const trimmedContact = contact?.trim();
+        const trimmedQid = qid?.trim();
+        const trimmedCrno = crno?.trim();
+        const trimmedDescription = description?.trim();
+
+        if (!trimmedFirstName) {
+            return toast({
+                variant: "destructive",
+                title: "First Name is required.",
+            });
+        } else if (!trimmedLastName) {
+            return toast({
+                variant: "destructive",
+                title: "Last Name is required.",
+            });
+        } else if (!trimmedEmail) {
+            return toast({
+                variant: "destructive",
+                title: "Email is required.",
+            });
+        } else if (!experience) {
+            return toast({
+                variant: "destructive",
+                title: "Experience is required.",
+            });
+        } else if (isNaN(experience) || experience <= 0) {
+            return toast({
+                variant: "destructive",
+                title: "Enter a valid number for Experience.",
+            });
+        } else if (!trimmedRole) {
+            return toast({
+                variant: "destructive",
+                title: "Role is required.",
+            });
+        } else if (!trimmedContact) {
+            return toast({
+                variant: "destructive",
+                title: "Contact is required.",
+            });
+        } else if (!trimmedQid) {
+            return toast({
+                variant: "destructive",
+                title: "QID is required.",
+            });
+        } else if (!trimmedCrno) {
+            return toast({
+                variant: "destructive",
+                title: "CR No is required.",
+            });
+        } else if (!trimmedDescription) {
+            return toast({
+                variant: "destructive",
+                title: "Description is required.",
+            });
+        }
+
         const data = {
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
+            firstName: trimmedFirstName,
+            lastName: trimmedLastName,
+            email: trimmedEmail,
             userId: user.id,
-            role: role,
-            workExperience: experience,
-            // location: location,
-            contact: contact,
-            qId: qid,
-            crNo: crno,
-            bestWork: image,
-            description: description,
-            date: date,
+            role: trimmedRole,
+            workExperience: experience, // Assuming experience is a number, no need to trim
+            // location: location?.trim(), // Uncomment and trim if needed
+            contact: trimmedContact,
+            qId: trimmedQid,
+            crNo: trimmedCrno,
+            bestWork: image, // Assuming image is not a string, no need to trim
+            description: trimmedDescription,
+            date: date, // Assuming date is not a string, no need to trim
         };
 
         const nn = firstName + " " + lastName;
@@ -91,7 +152,7 @@ const Register = () => {
 
             if (res.data.status === "success") {
                 dispatch(setClient(res.data.data.client));
-                navigate("/vendor/dashboard");
+                navigate("/vendor/profile");
             }
         } catch (error) {
             console.error(error);
@@ -138,13 +199,13 @@ const Register = () => {
                     />
                     <ClientInput
                         title={"Work Experience"}
-                        type={"number"}
+                        type={"text"}
                         value={experience}
                         setValue={setExperience}
                     />
                     <ClientInput
                         title={"Contact"}
-                        type={"number"}
+                        type={"text"}
                         value={contact}
                         setValue={setContact}
                     />
@@ -171,6 +232,7 @@ const Register = () => {
                         title={"Image"}
                         value={image}
                         setValue={setImage}
+                        setLoading={setIsLoading}
                     />
                     <MultiDatePicker date={date} setSelectedDate={setDate} />
                 </div>
@@ -178,7 +240,10 @@ const Register = () => {
             <div className="flex justify-center mt-10">
                 <Button
                     className="w-fit mx-auto px-10 py-[10px]"
-                    onClick={handleSubmit}
+                    onClick={() => {
+                        if (isLoading) return;
+                        return handleSubmit();
+                    }}
                 >
                     {isLoading ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

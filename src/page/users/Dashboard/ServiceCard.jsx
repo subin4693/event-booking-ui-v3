@@ -9,7 +9,7 @@ const EventCard = ({ image, title, id, date, location }) => {
         <div className="flex mt-10">
             <Card className="w-[300px] overflow-hidden pt-5 bg-muted">
                 <CardContent>
-                    <div className="   rounded-[25px]   overflow-hidden border  group shadow-custom  w-[250px]">
+                    <div className=" mb-3  rounded-[25px]   overflow-hidden border  group shadow-custom  w-[250px]">
                         <div className="relative">
                             <img
                                 src={`${image && image[0]}`}
@@ -22,7 +22,7 @@ const EventCard = ({ image, title, id, date, location }) => {
                     </div>
 
                     <p>Title : {title}</p>
-                    <p>Date : {date}</p>
+                    <p>Date : {date[0] + " -- " + date[date.length - 1]}</p>
                     <p>location : {location}</p>
                     <br />
                     <Button>

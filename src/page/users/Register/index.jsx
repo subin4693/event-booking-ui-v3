@@ -4,7 +4,7 @@ import ClientInput from "@/components/ClientInput";
 import ClientInputSelect from "@/components/ClientInputSelect";
 import ClientTextArea from "@/components/ClientTextArea";
 import { Button } from "@/components/ui/button";
-import ClientInputImage from "./ClientInputImage";
+import ClientInputImage from "@/components/ClientInputImage";
 import { v4 as uuidv4 } from "uuid";
 
 import axios from "axios";
@@ -59,43 +59,49 @@ const Register = () => {
         fetchData();
     }, []);
 
-    const fileToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-        });
-    };
-
     const handleSubmit = async () => {
-        if (!image || image.length === 0) {
-            toast({
-                description: "There is no image provided",
-                variant: "destructive",
-            });
+        const trimmedFirstName = firstName?.trim();
+        const trimmedLastName = lastName?.trim();
+        const trimmedEmail = email?.trim();
+        const trimmedContact = contact?.trim();
+        const trimmedQid = qid?.trim();
 
-            return;
+        if (!trimmedFirstName) {
+            return toast({
+                variant: "destructive",
+                title: "First Name is required.",
+            });
+        } else if (!trimmedLastName) {
+            return toast({
+                variant: "destructive",
+                title: "Last Name is required.",
+            });
+        } else if (!trimmedEmail) {
+            return toast({
+                variant: "destructive",
+                title: "Email is required.",
+            });
+        } else if (!trimmedContact) {
+            return toast({
+                variant: "destructive",
+                title: "Contact is required.",
+            });
+        } else if (!trimmedQid) {
+            return toast({
+                variant: "destructive",
+                title: "QID is required.",
+            });
         }
 
-        const file = image[0];
-        let picture = await fileToBase64(file);
-        // const extension = file.name.split(".").pop();
-        // const newName = `${uuidv4()}.${extension}`;
-
-        // const newImage = new File([file], newName, { type: file.type });
-
+        // Prepare the data object with trimmed values and optional image
         const userDetails = {
-            firstName,
-            lastName,
-            email,
+            firstName: trimmedFirstName,
+            lastName: trimmedLastName,
+            email: trimmedEmail,
             userId: user.id,
-            workExperience: Number(experience),
-            location,
-            contact,
-            qId: qid,
-            profile_photo: picture,
-            description,
+            contact: trimmedContact,
+            qId: trimmedQid,
+            profile_photo: image || null, // Set to null if image is not provided
         };
 
         try {
@@ -139,8 +145,8 @@ const Register = () => {
     ];
 
     return (
-        <div className="  bg-card text-foreground   flex flex-col justify-center items-center ">
-            <div className="flex w-full max-w-[1200px] gap-10">
+        <div className="  bg-card text-foreground   flex  justify-center items-center flex-col ">
+            <div className="flex w-full max-w-[1200px] gap-10 flex-col lg:flex-row">
                 <div className="space-y-5 flex-1 ">
                     {/* //typid //clientid */}
                     {/* name */}
@@ -216,13 +222,17 @@ const Register = () => {
                         title={"Image"}
                         value={image}
                         setValue={setImage}
+                        setLoading={setIsLoading}
                     />
                 </div>
             </div>
             <div className="flex justify-center mt-10">
                 <Button
                     className="w-fit mx-auto px-10 py-[10px]"
-                    onClick={handleSubmit}
+                    onClick={() => {
+                        if (isLoading) return;
+                        return handleSubmit();
+                    }}
                 >
                     {isLoading ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

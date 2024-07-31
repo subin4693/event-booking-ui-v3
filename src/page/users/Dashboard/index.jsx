@@ -69,7 +69,7 @@ const Dashboard = () => {
                 Popular Events by Qatar Hub
             </h2>
             <div className="flex gap-10 flex-col md:flex-row">
-                <div className="flex justify-center md:justify-between flex-wrap gap-5 mt-2">
+                <div className="flex justify-center md:justify-start flex-wrap gap-5 mt-2">
                     {!loading ? (
                         getEvents().map(({ item, image }) => {
                             return (
@@ -86,7 +86,10 @@ const Dashboard = () => {
                             );
                         })
                     ) : (
-                        <Skeleton className="rounded-2xl h-[250px]" />
+                        <div className="flex  gap-5 mt-5 flex-wrap">
+                            <Skeleton className={"w-[300px] h-[350px] "} />
+                            <Skeleton className={"w-[300px] h-[350px] "} />
+                        </div>
                     )}
                 </div>
             </div>
@@ -149,7 +152,7 @@ const Dashboard = () => {
                         {getRandomEvents().map(({ item, image }) => (
                             <CategoryEventCard
                                 key={item && item?._id}
-                                eventImage={image && item?.images}
+                                eventImage={item && item?.images}
                                 eventTitle={item && item?.name}
                                 date={item.dates.map((date) =>
                                     formatDate(date)
@@ -165,19 +168,29 @@ const Dashboard = () => {
     );
 };
 
-const CategoryEventCard = ({ image, eventTitle, date, place, description }) => {
-    console.log(image);
+const CategoryEventCard = ({
+    eventImage,
+    eventTitle,
+    date,
+    place,
+    description,
+}) => {
     return (
         <div className="p-4 mb-4 flex items-center justify-between rounded-lg bg-muted shadow-md">
             <img
-                src={`${image && image[0]}`}
-                className="w-24 h-24 rounded-lg object-cover"
+                src={`${eventImage && eventImage[0]}`}
+                className="w-24 h-24 rounded-lg object-cover "
             />
-            <div className="ml-4 flex-1">
-                <h3 className="text-lg font-semibold">{eventTitle}</h3>
-                <p className="text-sm">{date}</p>
-                <p className="text-sm">{place}</p>
-                <p className="text-sm mt-2">{description}</p>
+
+            <div className="ml-4  flex-1">
+                <h3 className=" text-lg font-semibold">Title : {eventTitle}</h3>
+                <p className="text-sm">
+                    Date : {date[0] + " -- " + date[date.length - 1]}
+                </p>
+                <p className="text-sm">Place : {place}</p>
+                <p className="text-sm mt-2 line-clamp-1">
+                    Description : {description}
+                </p>
             </div>
             <Button>
                 <Link to="">Book now</Link>

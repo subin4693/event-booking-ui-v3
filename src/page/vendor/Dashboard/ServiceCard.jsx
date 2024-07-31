@@ -1,50 +1,37 @@
 import React from "react";
-import { Card } from "@/components/ui/card";
-import { Pen, Trash } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
-const ServiceCard = ({
-    name,
-    description,
-    price,
-    contact,
-    image,
-    handleDelete,
-    handleEdit,
-    id,
-}) => {
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+
+const EventCard = ({ image, title, id, date, location }) => {
     return (
-        <Card className="flex flex-col md:flex-row w-full p-3 md:w-[500px] relative group h-fit">
-            <div className="w-full md:w-[300px] flex-1 h-[200px] rounded-lg overflow-hidden">
-                <img src={image} className="w-full h-full object-coveer" />
-            </div>
-            <div className="md:px-3 w-full md:w-[200px] m-3 md:ml-6 flex-1 flex flex-col">
-                <div className="flex-1 justify-center">
-                    <p>Title : {name}</p>
-                    <p>Description : {description}</p>
-                    <p>Price : {price}</p>
-                    <p>Contact : {contact}</p>
-                </div>
-                <div className="mt-10  flex flex-end absolute right-5 bottom-5 opacity-0 delay-50 duration-100 group-hover:opacity-100">
-                    <Button
-                        onClick={() => handleEdit(id)}
-                        variant="outline"
-                        size="icon"
-                    >
-                        <Pen />
-                    </Button>{" "}
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <Button
-                        variant="destructive"
-                        size="icon"
-                        onClick={() => handleDelete(id)}
-                    >
-                        <Trash />
+        <div className="flex mt-10">
+            <Card className="w-[300px] overflow-hidden pt-5 bg-muted">
+                <CardContent>
+                    <div className="   rounded-[25px]   overflow-hidden border  group shadow-custom  w-[250px]">
+                        <div className="relative">
+                            <img
+                                src={`${image && image[0]}`}
+                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            />
+                            <div
+                                className={`absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-70 transition duration-300`}
+                            ></div>
+                        </div>
+                    </div>
+
+                    <p>Title : {title}</p>
+                    <p>Date : {date}</p>
+                    <p>location : {location}</p>
+                    <br />
+                    <Button>
+                        <Link to="">Book now</Link>
                     </Button>
-                </div>
-            </div>
-        </Card>
+                </CardContent>
+            </Card>
+        </div>
     );
 };
 
-export default ServiceCard;
+export default EventCard;

@@ -129,7 +129,10 @@ const Signup = () => {
 
                     <div className="flex items-center flex-col">
                         <Button
-                            onClick={handleSignup}
+                            onClick={() => {
+                                if (isLoading) return;
+                                handleSignup();
+                            }}
                             className={"max-w-fit px-20 mx-auto mb-8 "}
                         >
                             {isLoading ? (

@@ -3,24 +3,26 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import ServiceDetails from "./ServiceDetails";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ServiceCardContainer = ({
     selectedService,
     servicesList,
     handleBookings,
     bookings,
+    itemsLoading,
 }) => {
     const [singleService, setSingleService] = useState(null);
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5 mt-10">
             <Dialog>
-                {servicesList &&
+                {!itemsLoading ? (
+                    servicesList &&
                     servicesList[selectedService?._id]?.map((service) => (
                         <DialogTrigger
                             onClick={() => setSingleService(service)}
                         >
-                            {console.log(service)}
                             <Card
                                 className={`group relative overflow-hidden rounded-2xl text-left      
                              
@@ -66,7 +68,14 @@ const ServiceCardContainer = ({
                                 </CardContent>
                             </Card>
                         </DialogTrigger>
-                    ))}
+                    ))
+                ) : (
+                    <>
+                        <Skeleton className={"h-[300px]"} />
+                        <Skeleton className={"h-[300px]"} />
+                        <Skeleton className={"h-[300px]"} />
+                    </>
+                )}
                 <ServiceDetails
                     singleService={singleService}
                     handleBookings={handleBookings}

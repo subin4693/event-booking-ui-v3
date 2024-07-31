@@ -13,7 +13,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 import { setClient } from "@/features/clientSlice";
-import useImageToBase64 from "@/hooks/useImageToBase64"; // Import your custom hook
 
 const Register = () => {
     const { user } = useSelector((state) => state.user);
@@ -40,43 +39,79 @@ const Register = () => {
     const { toast } = useToast();
 
     const handleSubmit = async () => {
-        // console.log(imageBase64);
-        if (!image) {
-            toast({
-                description:
-                    "There is no image provided or failed to convert to Base64.",
-                variant: "destructive",
-            });
-            return;
-        }
+        const trimmedFirstName = firstName?.trim();
+        const trimmedLastName = lastName?.trim();
+        const trimmedEmail = email?.trim();
+        const trimmedRole = role?.trim();
+        const trimmedContact = contact?.trim();
+        const trimmedQid = qid?.trim();
+        const trimmedCrno = crno?.trim();
+        const trimmedDescription = description?.trim();
 
-        // const data = new FormData();
-        // data.append("firstName", firstName);
-        // data.append("lastName", lastName);
-        // data.append("email", email);
-        // data.append("userId", user.id);
-        // data.append("role", role);
-        // data.append("workExperience", experience);
-        // data.append("location", location);
-        // data.append("contact", contact);
-        // data.append("qId", qid);
-        // data.append("crNo", crno);
-        // data.append("bestWork", image);
-        // data.append("description", description);
-        // date.forEach((d) => data.append("availability[]", d));
+        if (!trimmedFirstName) {
+            return toast({
+                variant: "destructive",
+                title: "First Name is required.",
+            });
+        } else if (!trimmedLastName) {
+            return toast({
+                variant: "destructive",
+                title: "Last Name is required.",
+            });
+        } else if (!trimmedEmail) {
+            return toast({
+                variant: "destructive",
+                title: "Email is required.",
+            });
+        } else if (!experience) {
+            return toast({
+                variant: "destructive",
+                title: "Experience is required.",
+            });
+        } else if (isNaN(experience) || experience <= 0) {
+            return toast({
+                variant: "destructive",
+                title: "Enter a valid number for Experience.",
+            });
+        } else if (!trimmedRole) {
+            return toast({
+                variant: "destructive",
+                title: "Role is required.",
+            });
+        } else if (!trimmedContact) {
+            return toast({
+                variant: "destructive",
+                title: "Contact is required.",
+            });
+        } else if (!trimmedQid) {
+            return toast({
+                variant: "destructive",
+                title: "QID is required.",
+            });
+        } else if (!trimmedCrno) {
+            return toast({
+                variant: "destructive",
+                title: "CR No is required.",
+            });
+        } else if (!trimmedDescription) {
+            return toast({
+                variant: "destructive",
+                title: "Description is required.",
+            });
+        }
         const data = {
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            userId: user.id,
-            role: role,
-            workExperience: experience,
-            location: location,
-            contact: contact,
-            qId: qid,
-            crNo: crno,
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            email: email.trim(),
+            userId: user.id.trim(),
+            role: role.trim(),
+            workExperience: experience.trim(),
+
+            contact: contact.trim(),
+            qId: qid.trim(),
+            crNo: crno.trim(),
             bestWork: image,
-            description: description,
+            description: description.trim(),
             date: date,
         };
         try {
@@ -87,7 +122,7 @@ const Register = () => {
             if (res.data.status === "success") {
                 console.log(res.data);
                 dispatch(setClient(res?.data.data.newClient));
-                navigate("/vendor/dashboard");
+                navigate("/vendor/profile");
             }
         } catch (error) {
             console.error(error);
@@ -100,6 +135,9 @@ const Register = () => {
         const getTypes = async () => {
             const res = await axios.get(BASE_URL + "/types");
             setOptions(res.data.types);
+            console.log(res.data.types[0]._id);
+
+            setRole(res.data.types[0]._id);
         };
         getTypes();
     }, []);
@@ -134,13 +172,13 @@ const Register = () => {
                     />
                     <ClientInput
                         title={"Work Experience"}
-                        type={"number"}
+                        type={"text"}
                         value={experience}
                         setValue={setExperience}
                     />
                     <ClientInput
                         title={"Contact"}
-                        type={"number"}
+                        type={"text"}
                         value={contact}
                         setValue={setContact}
                     />
@@ -167,6 +205,7 @@ const Register = () => {
                         title={"Image"}
                         value={image}
                         setValue={setImage}
+                        setLoading={setIsLoading}
                     />
                     <MultiDatePicker setSelectedDate={setDate} />
                 </div>
@@ -174,7 +213,10 @@ const Register = () => {
             <div className="flex justify-center mt-10">
                 <Button
                     className="w-fit mx-auto px-10 py-[10px]"
-                    onClick={handleSubmit}
+                    onClick={() => {
+                        if (isLoading) return;
+                        return handleSubmit();
+                    }}
                 >
                     {isLoading ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

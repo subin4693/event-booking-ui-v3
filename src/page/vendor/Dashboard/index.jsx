@@ -1,142 +1,187 @@
-import { Button } from "@/components/ui/button";
-import React, { useEffect } from "react";
-import EventBox from "./EventBox";
-import ServiceCard from "./ServiceCard";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { addItem, clearItems, deleteItem } from "@/features/itemSlice";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useToast } from "@/components/ui/use-toast";
+import ServiceCard from "./ServiceCard";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+const categories = ["Design", "Art", "Sports", "Music", "Business"];
+
+const eventsData = {
+    Design: [],
+    Art: [],
+    // Add more events for other categories
+};
 
 const Dashboard = () => {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const location = useLocation();
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [selectedCategories, setSelectedCategories] = useState([]);
+
     const BASE_URL = import.meta.env.VITE_BASE_URL;
-    const { client } = useSelector((state) => state.client);
-    const { items } = useSelector((state) => state.item);
-    const { toast } = useToast();
 
-    const handleDelete = async (id) => {
-        await axios
-            .delete(`${BASE_URL}/items/delete/${id}`)
-            .then((res) => {
-                toast({
-                    title: "Deleted successfull",
-                });
-                dispatch(deleteItem(id));
-            })
-            .catch((err) => {
-                toast({
-                    variant: "destructive",
-                    title: "Something wrong please try again later",
-                });
-                console.log(err);
-            });
-    };
     useEffect(() => {
-        const getItems = async () => {
-            // console.log(user.id);
+        const getEvents = async () => {
+            try {
+                setLoading(true);
+                const res = await axios.get(BASE_URL + "/events/published");
 
-            await axios
-                .get(BASE_URL + "/items/user/" + client?._id)
-                .then((res) => {
-                    const data = res.data.items;
-
-                    dispatch(clearItems());
-                    data.map((d) => {
-                        // d.item.images = d.image;
-                        // d.item.decorationImages = d.decorationImages;
-                        dispatch(addItem(d));
-                    });
-                })
-                .catch((err) => console.log(err));
+                setEvents(res.data);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
         };
-        getItems();
-    }, [location]);
+        getEvents();
+    }, []);
 
-    const handleEdit = (id) => {
-        navigate("/vendor/create-services/", { state: { itemId: id } });
+    const getEvents = () => {
+        const allEvents = Object.values(events).flat();
+        return allEvents;
+    };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day} `;
+    };
+
+    const handleCategoryClick = (category) => {
+        setSelectedCategories((prevSelectedCategories) =>
+            prevSelectedCategories.includes(category)
+                ? prevSelectedCategories.filter((cat) => cat !== category)
+                : [...prevSelectedCategories, category]
+        );
+    };
+
+    const isSelected = (category) => selectedCategories.includes(category);
+
+    const getRandomEvents = () => {
+        const allEvents = Object.values(events).flat();
+        return allEvents.sort(() => 0.5 - Math.random()).slice(0, 3); // Get 3 random events
     };
 
     return (
         <div>
-            <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold">Vendor details : </h1>
-                <Link to="/vendor/create-services">
-                    <Button>Add Service</Button>
-                </Link>
-            </div>
-            <br />
-            <div>
-                <h2 className="text-2xl font-bold">Organizing Events</h2>
-                <br />
-                <h3 className="text-xl font-bold">Pendin tasks</h3>
-                <br />
-                <div className=" flex justify-center md:justify-between flex-wrap gap-5">
-                    <EventBox
-                        number={10}
-                        text={"Done"}
-                        colors={"bg-red-500 dark:bg-red-800"}
-                    />
-                    <EventBox
-                        number={10}
-                        text={"In Progress"}
-                        colors={"bg-pink-500 dark:bg-pink-800"}
-                    />
-                    <EventBox
-                        number={10}
-                        text={"Waiting for  Review"}
-                        colors={"bg-purple-500 dark:bg-purple-800"}
-                    />
-                    <EventBox
-                        number={10}
-                        text={"Ongoing"}
-                        colors={"bg-blue-500 dark:bg-blue-800"}
-                    />
-                </div>
-            </div>
-            <div className="mt-10">
-                <h2 className="text-2xl font-bold">Current Event</h2>
-                <div className="bg-primary w-[400px] mt-5 rounded-lg py-2 pl-5 pr-10 text-white">
-                    <h3 className="font-bold">Personal Wedding Event</h3>
-                    <h4>Saber & Oro</h4>
-                    <div className="flex  justify-between items-center">
-                        <div className="w-9 mt-2 h-9 rounded-full overflow-hidden">
-                            <img
-                                src="https://github.com/shadcn.png"
-                                className="w-full h-full object-cover"
-                                alt="profile"
-                            />
-                        </div>
-                        <span>Now</span>
-                    </div>
-                </div>
-            </div>
-            <div className="mt-10">
-                <h2 className="text-2xl font-bold">Service Details</h2>
-                <br />
-                <div className="flex flex-wrap justify-center gap-5">
-                    {items &&
-                        items?.map((singleItem) => {
+            <h2 className="text-xl font-semibold mb-0 font-foreground">
+                Popular Events by Qatar Hub
+            </h2>
+            <div className="flex gap-10 flex-col md:flex-row">
+                <div className="flex justify-center md:justify-between flex-wrap gap-5 mt-2">
+                    {!loading ? (
+                        getEvents().map(({ item, image }) => {
                             return (
                                 <ServiceCard
-                                    key={singleItem?._id}
-                                    id={singleItem?._id}
-                                    name={singleItem?.name}
-                                    description={singleItem?.description}
-                                    contact={singleItem?.contactInfo}
-                                    price={singleItem?.price}
-                                    image={singleItem?.images[0]}
-                                    handleDelete={handleDelete}
-                                    handleEdit={handleEdit}
+                                    key={item && item?._id}
+                                    id={item && item?._id}
+                                    image={item && item?.images}
+                                    title={item && item?.name}
+                                    date={item.dates.map((date) =>
+                                        formatDate(date)
+                                    )}
+                                    location={"Doha, Qatar"}
                                 />
                             );
-                        })}
+                        })
+                    ) : (
+                        <Skeleton className="rounded-2xl h-[250px]" />
+                    )}
                 </div>
             </div>
+            <h2 className="text-xl font-semibold mb-4 mt-10">
+                Choose by Category
+            </h2>
+            <div className="flex overflow-x-auto mb-3 flex-wrap">
+                {categories.map((category, index) => (
+                    <div
+                        key={index}
+                        className="p-4 cursor-pointer"
+                        onClick={() => handleCategoryClick(category)}
+                    >
+                        <div
+                            className={`p-2 rounded-2xl border font-semibold text-foreground px-5 ${
+                                isSelected(category)
+                                    ? "bg-primary border-primary text-white"
+                                    : "bg-muted border-primary"
+                            }`}
+                        >
+                            <h3 className="text-center">{category}</h3>
+                        </div>
+                    </div>
+                ))}
+            </div>
+            {selectedCategories.length > 0 ? (
+                <div>
+                    <h2 className="text-xl font-semibold mb-4">
+                        Selected Events
+                    </h2>
+                    {selectedCategories.map((category) => (
+                        <div key={category} className="mb-6">
+                            <h3 className="text-lg font-semibold mb-2">
+                                {category} Events
+                            </h3>
+                            <div>
+                                {eventsData[category]?.map((event, index) => {
+                                    return (
+                                        <CategoryEventCard
+                                            key={index}
+                                            eventImage={event.eventImage}
+                                            eventTitle={event.eventTitle}
+                                            date={event.date}
+                                            place={event.place}
+                                            description={event.description}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div>
+                    <h2 className="text-xl font-semibold mb-4">
+                        Random Events
+                    </h2>
+                    <div>
+                        {getRandomEvents().map(({ item, image }) => (
+                            <CategoryEventCard
+                                key={item && item?._id}
+                                eventImage={image && item?.images}
+                                eventTitle={item && item?.name}
+                                date={item.dates.map((date) =>
+                                    formatDate(date)
+                                )}
+                                place={"Doha, Qatar"}
+                                description={item.description}
+                            />
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
+const CategoryEventCard = ({ image, eventTitle, date, place, description }) => {
+    console.log(image);
+    return (
+        <div className="p-4 mb-4 flex items-center justify-between rounded-lg bg-muted shadow-md">
+            <img
+                src={`${image && image[0]}`}
+                className="w-24 h-24 rounded-lg object-cover"
+            />
+            <div className="ml-4 flex-1">
+                <h3 className="text-lg font-semibold">{eventTitle}</h3>
+                <p className="text-sm">{date}</p>
+                <p className="text-sm">{place}</p>
+                <p className="text-sm mt-2">{description}</p>
+            </div>
+            <Button>
+                <Link to="">Book now</Link>
+            </Button>
+        </div>
+    );
+};
 export default Dashboard;

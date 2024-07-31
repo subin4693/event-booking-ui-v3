@@ -49,7 +49,7 @@ const RegisterCard = () => {
         <div className="flex justify-center items-center h-full">
             <Card className="max-w-[450px] overflow-hidden pt-5 bg-muted">
                 <CardContent>
-                    <div className="w-full h-[300px] overflow-hidden rounded-lg mb-4">
+                    <div className="w-full max-h-[300px] overflow-hidden rounded-lg mb-4">
                         <img
                             src="https://github.com/shadcn.png"
                             className="w-full h-full object-coveer"
@@ -70,7 +70,7 @@ const RegisterCard = () => {
                         <Link to="register">
                             <Button>
                                 {loading ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    <Loader2 className="mx-5 h-4 w-4 animate-spin" />
                                 ) : (
                                     "Register"
                                 )}

@@ -7,12 +7,15 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { Loader2 } from "lucide-react";
 
 const CreateEvents = () => {
     const [services, setServices] = useState();
     const [selectedService, setSelectedService] = useState(null);
     const [bookings, setBookings] = useState([]);
     const [showTitleField, setShowTitleField] = useState(true);
+    const [itemsLoading, setItemsLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -33,8 +36,6 @@ const CreateEvents = () => {
         if (!tempDate.from || !tempDate.to) {
             return;
         }
-
-        // Create a new Date object from the input, setting the time to midnight in UTC
         function normalizeToUTC(date) {
             const utcDate = new Date(
                 Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
@@ -126,27 +127,15 @@ const CreateEvents = () => {
     };
     const handleCreateEvent = async () => {
         try {
+            setLoading(true);
             // Convert image file to Base64
-            const convertToBase64 = (file) => {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = (error) => reject(error);
-                });
-            };
-
-            let imageBase64 = null;
-            if (image) {
-                imageBase64 = await convertToBase64(image);
-            }
 
             // Create the data object
             const data = {
                 userId: user.id,
                 name: title,
                 description: description,
-                images: [imageBase64],
+                images: [image],
                 venue: venue,
                 catering: catering,
                 photograph: photograph,
@@ -163,15 +152,17 @@ const CreateEvents = () => {
         } catch (error) {
             console.error("Error creating event:", error);
             console.log(error.response);
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
         const getTypes = async () => {
-            console.log(date);
             if (!date || !date[0] || !date[date?.length - 1]) return;
 
             try {
+                setItemsLoading(true);
                 const data = await axios.get(
                     BASE_URL +
                         "/items?start=" +
@@ -183,11 +174,12 @@ const CreateEvents = () => {
                 setServicesList(data.data.items);
             } catch (error) {
                 console.log(error);
+            } finally {
+                setItemsLoading(false);
             }
         };
         getTypes();
     }, [date]);
-    console.log(servicesList);
 
     useEffect(() => {
         const getTypes = async () => {
@@ -218,6 +210,7 @@ const CreateEvents = () => {
                     setImage={setImage}
                     date={tempDate}
                     setDate={setTempDate}
+                    iosdate={date}
                 />
             )}
             <Topbar
@@ -231,15 +224,20 @@ const CreateEvents = () => {
                     servicesList={servicesList}
                     handleBookings={handleBookings}
                     bookings={bookings}
+                    itemsLoading={itemsLoading}
                 />
             </div>
             {bookings?.length > 0 && (
                 <div className="sticky bottom-0 flex justify-center backdrop-blur  z-50 p-4">
                     <Button
-                        className="px-4 py-2 text-white rounded"
+                        className="px-4 py-2 text-white rounded "
                         onClick={handleCreateEvent}
                     >
-                        {bookings.length} Book now
+                        {loading ? (
+                            <Loader2 className="mx-5 h-4 w-4 animate-spin" />
+                        ) : (
+                            <>{bookings.length} Book now</>
+                        )}
                     </Button>
                 </div>
             )}

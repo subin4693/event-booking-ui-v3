@@ -52,7 +52,7 @@ const ServiceCard = ({
     return (
         <>
             <div onClick={openModal} className="flex mt-10 cursor-pointer">
-                <Card className="w-[350px] overflow-hidden pt-5 bg-muted">
+                <Card className="w-[350px] overflow-hidden pt-5  bg-muted">
                     <CardContent>
                         <div className="rounded-[25px] overflow-hidden border  group shadow-custom  w-[300px]">
                             <div className="relative w-full h-[200px] ">
@@ -67,7 +67,9 @@ const ServiceCard = ({
                         </div>
 
                         <p className="mt-4">Title : {title}</p>
-                        <p>Description : {description}</p>
+                        <p className="line-clamp-2">
+                            Description : {description}
+                        </p>
                         <p>Status : {status}</p>
                         <br />
                     </CardContent>

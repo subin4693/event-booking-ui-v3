@@ -1,28 +1,27 @@
 import { ImageIcon } from "lucide-react";
 import React, { useState, useEffect } from "react";
+import useFirebaseUpload from "@/hooks/use-firebaseUpload";
 
-const ClientInputImageEdit = ({ title, value, setValue }) => {
-    const [image, setImage] = useState(value); // State to store the Base64 image
+const ClientInputImageEdit = ({ title, value, setValue, setLoading }) => {
+    const [image, setImage] = useState(value);
 
-    // useEffect(() => {
-    //     if (image) {
-    //         const reader = new FileReader();
-    //         reader.onloadend = () => {
-    //             setValue(reader.result); // Update the parent component with the Base64 string
-    //         };
-    //         reader.readAsDataURL(image);
-    //     }
-    // }, [image]);
+    const { progress, error, downloadURL, fileName } = useFirebaseUpload(image);
+
+    useEffect(() => {
+        if (error) {
+            console.log(error);
+            setLoading(false);
+            return;
+        } else if (downloadURL) {
+            setValue(downloadURL);
+            setImage(downloadURL);
+            setLoading(false);
+        }
+    }, [error, downloadURL]);
 
     const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setValue(reader.result); // Update the parent component with the Base64 string
-            setImage(reader.result); // Update the parent component with the Base64 string
-        };
-        reader.readAsDataURL(file);
+        setImage(e.target.files[0]);
+        setLoading(true);
     };
 
     return (

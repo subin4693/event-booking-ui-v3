@@ -11,13 +11,10 @@ const Dashboard = () => {
     const { userDetail } = useSelector((state) => state.userDetail);
     const [loading, setLoading] = useState(false);
 
-    const [cancelLoading, setCancelLoading] = useState(false);
-
-    const [publishLoading, setPublishLoading] = useState(false);
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const [data, setData] = useState({});
 
-    const handleConfirm = async (eventId) => {
+    const handleConfirm = async (eventId, setPublishLoading) => {
         try {
             setPublishLoading(true);
             const res = await axios.post(
@@ -31,7 +28,7 @@ const Dashboard = () => {
             setPublishLoading(false);
         }
     };
-    const handleCancel = async (eventId) => {
+    const handleCancel = async (eventId, setCancelLoading) => {
         try {
             setCancelLoading(true);
             const res = await axios.post(
@@ -105,14 +102,13 @@ const Dashboard = () => {
                     data &&
                     data[selectedService] &&
                     data[selectedService]?.map((singleData) => {
+                        console.log(singleData?.item.dates);
                         return (
                             <ServiceCard
-                                cancelLoading={cancelLoading}
-                                setPublishLoading={setPublishLoading}
-                                publishLoading={publishLoading}
                                 handleConfirm={handleConfirm}
                                 handleCancel={handleCancel}
                                 key={singleData.item._id}
+                                date={singleData && singleData?.item?.dates}
                                 eventId={singleData && singleData.item._id}
                                 image={singleData && singleData?.item?.images}
                                 title={singleData && singleData?.item?.name}
@@ -129,7 +125,11 @@ const Dashboard = () => {
                         );
                     })
                 ) : (
-                    <Skeleton className={"w-[350px] h-[400px]"} />
+                    <>
+                        <Skeleton className={"w-[350px] h-[400px]"} />
+                        <Skeleton className={"w-[350px] h-[400px]"} />
+                        <Skeleton className={"w-[350px] h-[400px]"} />
+                    </>
                 )}
             </div>
         </div>

@@ -1,24 +1,27 @@
 import { ImageIcon } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import useImageToBase64 from "@/hooks/useImageToBase64"; // Import your custom hook
 
-const ClientInputImage = ({ title, value, setValue }) => {
+import useFirebaseUpload from "@/hooks/use-firebaseUpload";
+
+const ClientInputImage = ({ title, value, setValue, setLoading }) => {
     const [image, setImage] = useState(value);
 
-    const { base64, error } = useImageToBase64(image);
+    const { progress, error, downloadURL, fileName } = useFirebaseUpload(image);
 
-    // Set the base64 value when conversion is complete
     useEffect(() => {
-        if (base64) {
-            setValue(base64); // Update the value with base64
+        if (error) {
+            console.log(error);
+            setLoading(false);
+            return;
+        } else if (downloadURL) {
+            setValue(downloadURL);
+            setLoading(false);
         }
-    }, [base64, setValue]);
+    }, [error, downloadURL]);
 
     const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImage(file); // Set file to state to trigger conversion
-        }
+        setImage(e.target.files[0]);
+        setLoading(true);
     };
 
     return (
@@ -32,10 +35,10 @@ const ClientInputImage = ({ title, value, setValue }) => {
                         className="hidden w-full h-full"
                         onChange={handleFileChange}
                     />
-                    {base64 ? (
+                    {value ? (
                         <div className="relative w-full h-full">
                             <img
-                                src={base64}
+                                src={value}
                                 alt="Selected"
                                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                             />

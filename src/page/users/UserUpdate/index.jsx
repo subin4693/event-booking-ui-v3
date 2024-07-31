@@ -4,7 +4,7 @@ import ClientInput from "@/components/ClientInput";
 import ClientInputSelect from "@/components/ClientInputSelect";
 import ClientTextArea from "@/components/ClientTextArea";
 import { Button } from "@/components/ui/button";
-import ClientInputImage from "./ClientInputImage";
+import ClientInputImage from "@/components/ClientInputImage";
 
 import axios from "axios";
 
@@ -36,7 +36,7 @@ const Register = () => {
     );
     const [contact, setContact] = useState(userDetail.contact || "");
     const [qid, setQid] = useState(userDetail.qId || "");
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState(userDetail.profile_photo || null);
     const [description, setDescription] = useState(
         userDetail.description || ""
     );
@@ -49,44 +49,49 @@ const Register = () => {
 
     const { toast } = useToast();
 
-    const fileToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-        });
-    };
-
     const handleSubmit = async () => {
-        // if (!image || image.length === 0) {
-        //   toast({
-        //     description: "There is no image provided",
-        //     variant: "destructive",
-        //   });
+        const trimmedFirstName = firstName?.trim();
+        const trimmedLastName = lastName?.trim();
+        const trimmedEmail = email?.trim();
+        const trimmedContact = contact?.trim();
+        const trimmedQid = qid?.trim();
 
-        //   return;
-        // }
-        let picture = "";
-
-        if (image === null) {
-            picture = userDetail.profile_photo;
-        } else if (image.length > 0) {
-            const file = image[0];
-            picture = await fileToBase64(file);
+        if (!trimmedFirstName) {
+            return toast({
+                variant: "destructive",
+                title: "First Name is required.",
+            });
+        } else if (!trimmedLastName) {
+            return toast({
+                variant: "destructive",
+                title: "Last Name is required.",
+            });
+        } else if (!trimmedEmail) {
+            return toast({
+                variant: "destructive",
+                title: "Email is required.",
+            });
+        } else if (!trimmedContact) {
+            return toast({
+                variant: "destructive",
+                title: "Contact is required.",
+            });
+        } else if (!trimmedQid) {
+            return toast({
+                variant: "destructive",
+                title: "QID is required.",
+            });
         }
 
+        // Prepare the data object with trimmed values and optional image
         const userDetails = {
-            firstName,
-            lastName,
-            email,
+            firstName: trimmedFirstName,
+            lastName: trimmedLastName,
+            email: trimmedEmail,
             userId: user.id,
-            workExperience: Number(experience),
-            location,
-            contact,
-            qId: qid,
-            profile_photo: picture,
-            description,
+            contact: trimmedContact,
+            qId: trimmedQid,
+            profile_photo: image || null, // Set to null if image is not provided
         };
 
         const nn = firstName + " " + lastName;
@@ -151,7 +156,7 @@ const Register = () => {
 
     return (
         <div className="  bg-card text-foreground   flex flex-col justify-center items-center ">
-            <div className="flex w-full max-w-[1200px] gap-10">
+            <div className="flex w-full max-w-[1200px] gap-10 flex-col lg:flex-row">
                 <div className="space-y-5 flex-1 ">
                     {/* //typid //clientid */}
                     {/* name */}
@@ -225,15 +230,19 @@ const Register = () => {
                     <br />
                     <ClientInputImage
                         title={"Image"}
-                        value={userDetail.profile_photo}
+                        value={image}
                         setValue={setImage}
+                        setLoading={setIsLoading}
                     />
                 </div>
             </div>
             <div className="flex justify-center mt-10">
                 <Button
                     className="w-fit mx-auto px-10 py-[10px]"
-                    onClick={handleSubmit}
+                    onClick={() => {
+                        if (isLoading) return;
+                        return handleSubmit();
+                    }}
                 >
                     {isLoading ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
