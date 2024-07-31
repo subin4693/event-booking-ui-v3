@@ -36,8 +36,6 @@ const Dashboard = () => {
     };
     useEffect(() => {
         const getItems = async () => {
-            // console.log(user.id);
-
             await axios
                 .get(BASE_URL + "/items/user/" + client?._id)
                 .then((res) => {

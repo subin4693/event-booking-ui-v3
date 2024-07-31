@@ -31,7 +31,6 @@ const CreateEvents = () => {
     const { toast } = useToast();
 
     useEffect(() => {
-        console.log(tempDate);
         if (!tempDate) return;
         if (!tempDate.from || !tempDate.to) {
             return;
@@ -142,7 +141,6 @@ const CreateEvents = () => {
                 decoration: decoration,
                 dates: date,
             };
-            console.log(data);
 
             // Send the data as JSON
             const response = await axios.post(BASE_URL + "/events", data);
@@ -151,7 +149,6 @@ const CreateEvents = () => {
             navigate("/users/events");
         } catch (error) {
             console.error("Error creating event:", error);
-            console.log(error.response);
         } finally {
             setLoading(false);
         }
@@ -170,7 +167,7 @@ const CreateEvents = () => {
                         "&end=" +
                         date[date?.length - 1]
                 );
-                console.log(data.data);
+
                 setServicesList(data.data.items);
             } catch (error) {
                 console.log(error);

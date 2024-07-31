@@ -5,10 +5,9 @@ function useImageToBase64(file) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        console.log(file);
         if (!file) {
             setBase64(null);
-            console.log("No file provided");
+
             return;
         }
 

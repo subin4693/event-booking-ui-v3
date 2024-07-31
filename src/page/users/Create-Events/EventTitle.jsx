@@ -59,7 +59,6 @@ const EventTitle = ({
                         &nbsp;&nbsp;&nbsp;
                         <Button
                             onClick={() => {
-                                console.log(iosdate?.length >= 2);
                                 if (loading) return;
 
                                 if (iosdate?.length < 1) {

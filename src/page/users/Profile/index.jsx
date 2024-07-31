@@ -102,7 +102,6 @@ const Dashboard = () => {
                     data &&
                     data[selectedService] &&
                     data[selectedService]?.map((singleData) => {
-                        console.log(singleData?.item.dates);
                         return (
                             <ServiceCard
                                 handleConfirm={handleConfirm}

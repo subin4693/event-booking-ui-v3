@@ -214,15 +214,8 @@ const EditEvents = () => {
 
     useEffect(() => {
         const getTypes = async () => {
-            console.log(date);
             if (!date || !date[0] || !date[date?.length - 1]) return;
-            console.log(
-                BASE_URL +
-                    "/items?start=" +
-                    date[0] +
-                    "&end" +
-                    date[date?.length - 1]
-            );
+
             try {
                 const data = await axios.get(
                     BASE_URL +

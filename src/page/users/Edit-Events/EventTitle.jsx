@@ -34,8 +34,6 @@ const EventTitle = ({
                         &nbsp;&nbsp;&nbsp;
                         <Button
                             onClick={() => {
-                                console.log(!iosdate?.length < 1);
-                                console.log(iosdate);
                                 if (!iosdate)
                                     return toast({
                                         variant: "destructive",

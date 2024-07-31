@@ -116,11 +116,10 @@ const Register = () => {
         };
         try {
             setIsLoading(true);
-            console.log(data);
+
             const res = await axios.post(`${BASE_URL}/client`, data);
 
             if (res.data.status === "success") {
-                console.log(res.data);
                 dispatch(setClient(res?.data.data.newClient));
                 navigate("/vendor/profile");
             }
@@ -135,7 +134,6 @@ const Register = () => {
         const getTypes = async () => {
             const res = await axios.get(BASE_URL + "/types");
             setOptions(res.data.types);
-            console.log(res.data.types[0]._id);
 
             setRole(res.data.types[0]._id);
         };

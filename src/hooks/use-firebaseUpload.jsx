@@ -14,8 +14,6 @@ const useFirebaseUpload = (file) => {
     const [fileName, setFileName] = useState(null);
 
     useEffect(() => {
-        console.log(!file?.name);
-
         if (!file?.name) return;
 
         const storage = getStorage(app);
@@ -41,7 +39,7 @@ const useFirebaseUpload = (file) => {
                         const downloadUrl = await getDownloadURL(
                             uploadTask.snapshot.ref
                         );
-                        console.log("Download URL:", downloadUrl);
+
                         setDownloadURL(downloadUrl);
                     } catch (error) {
                         console.error("Error getting download URL:", error);

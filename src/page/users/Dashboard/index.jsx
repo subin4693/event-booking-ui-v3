@@ -127,7 +127,6 @@ const Dashboard = () => {
                             </h3>
                             <div>
                                 {eventsData[category]?.map((event, index) => {
-                                    console.log(eventsData);
                                     return (
                                         <CategoryEventCard
                                             key={index}

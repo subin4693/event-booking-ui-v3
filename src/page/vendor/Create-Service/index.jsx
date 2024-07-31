@@ -128,7 +128,6 @@ const ClientServices = () => {
             clientId: client._id,
             dates: client.availability,
         };
-        console.log(data);
 
         if (client?.role?.type.toLowerCase() === "catering") {
             data.menuOptions = menuOptions;
@@ -142,7 +141,6 @@ const ClientServices = () => {
         }
 
         try {
-            console.log(data);
             // return;
             setLoading(true);
             if (ID) {

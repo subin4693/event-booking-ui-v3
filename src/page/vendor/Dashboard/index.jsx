@@ -165,7 +165,6 @@ const Dashboard = () => {
 };
 
 const CategoryEventCard = ({ image, eventTitle, date, place, description }) => {
-    console.log(image);
     return (
         <div className="p-4 mb-4 flex items-center justify-between rounded-lg bg-muted shadow-md">
             <img

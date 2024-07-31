@@ -24,7 +24,7 @@ const Events = () => {
                 const res = await axios.post(
                     BASE_URL + "/events/confirm/" + bookingId
                 );
-                console.log(res);
+
                 setData({ Upcoming: res.data.events });
                 setReload((prev) => !prev);
             } catch (error) {
@@ -62,7 +62,7 @@ const Events = () => {
                 const res = await axios.get(
                     BASE_URL + "/events/client/" + client._id
                 );
-                // console.log(res);
+
                 setData({ Upcoming: res.data.Upcoming, Past: res.data.Past });
             } catch (error) {
                 console.log(error);
@@ -82,13 +82,9 @@ const Events = () => {
                 />
             </div>
             <div className=" flex justify-center md:justify-start flex-wrap gap-5">
-                {console.log(data)}
-                {console.log(selectedService)}
-                {console.log(data[selectedService])}
                 {data &&
                     data[selectedService] &&
                     data[selectedService]?.map((singleData) => {
-                        console.log(singleData);
                         return (
                             <>
                                 <ServiceCard
