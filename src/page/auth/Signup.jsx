@@ -85,7 +85,7 @@ const Signup = () => {
     const handleAuthWithFacebook = () => {};
 
     return (
-        <div className="bg-gradient-to-l from-gray-600 via-gray-300 dark:from-ston-900 dark:via-gray-800 to-background min-h-screen flex items-center justify-center">
+        <div className="bg-gradient-to-l from-gray-600 via-gray-300 dark:from-ston-900 dark:via-gray-800 to-background min-h-screen flex items-center justify-center cursor-default">
             <div className="flex w-[1000px] bg-gray-400 dark:bg-stone-900 rounded-[25px]  overflow-hidden flex-col md:flex-row">
                 <div className="w-full md:w-1/2 p-10 text-foreground">
                     <h2 className="text-xl font-bold">Sign up</h2>

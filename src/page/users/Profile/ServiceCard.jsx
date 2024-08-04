@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ExternalLink, Loader2 } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import TicketPriceDialog from "./TicketPriceDialog";
 
 const EventCard = ({
     isPublished,
-
     handleCancel,
     handleConfirm,
-
     eventId,
     image,
     title,
@@ -19,9 +19,33 @@ const EventCard = ({
     date,
     selectedService,
 }) => {
-    const [cancelLoading, setCancelLoading] = useState(false);
+    const typeOne = [
+        {
+            category: "First class",
+            price: "",
+        },
+        {
+            category: "Second class",
+            price: "",
+        },
+        {
+            category: "Third class",
+            price: "",
+        },
+    ];
+    const typeTwo = [
+        {
+            category: "",
+            price: "",
+        },
+    ];
 
+    const [cancelLoading, setCancelLoading] = useState(false);
+    const [categorys, setCategorys] = useState(typeOne);
     const [publishLoading, setPublishLoading] = useState(false);
+
+    const [showDialog, setShowDialog] = useState(false);
+
     return (
         <div className="flex group   ">
             <Card className="w-[350px] overflow-hidden pt-5  bg-muted ">
@@ -96,15 +120,12 @@ const EventCard = ({
                             {status.toLowerCase() === "confirmed" &&
                                 !isPublished && (
                                     <Button
-                                        onClick={() =>
-                                            handleConfirm(
-                                                eventId,
-                                                setPublishLoading
-                                            )
-                                        }
+                                        onClick={() => {
+                                            setShowDialog(true);
+                                        }}
                                     >
                                         {publishLoading ? (
-                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            <Loader2 className="mx-5 h-4 w-4 animate-spin" />
                                         ) : (
                                             "Publish"
                                         )}
@@ -123,6 +144,16 @@ const EventCard = ({
                     )}
                 </CardContent>
             </Card>
+
+            <TicketPriceDialog
+                eventId={eventId}
+                setCategorys={setCategorys}
+                categorys={categorys}
+                setShowDialog={setShowDialog}
+                showDialog={showDialog}
+                handleConfirm={handleConfirm}
+                setPublishLoading={setPublishLoading}
+            />
         </div>
     );
 };

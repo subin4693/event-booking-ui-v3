@@ -133,9 +133,9 @@ const Register = () => {
     useEffect(() => {
         const getTypes = async () => {
             const res = await axios.get(BASE_URL + "/types");
-            setOptions(res.data.types);
+            setOptions(res?.data?.types);
 
-            setRole(res.data.types[0]._id);
+
         };
         getTypes();
     }, []);

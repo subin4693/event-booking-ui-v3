@@ -35,6 +35,8 @@ import { useSelector } from "react-redux";
 import EditEvents from "./page/users/Edit-Events";
 import VendarUpdate from "@/page/vendor/RegisterUpdate";
 
+import EventSummary from "./page/users/Event-Summary";
+
 const App = () => {
     const { user } = useSelector((state) => state.user);
     const { client } = useSelector((state) => state.client);
@@ -143,6 +145,26 @@ const App = () => {
                                 element={
                                     userDetail?.lastName ? (
                                         <Profile />
+                                    ) : (
+                                        <Navigate to="/users/register" />
+                                    )
+                                }
+                            />
+                            <Route
+                                path="event-summary/:eventId"
+                                element={
+                                    userDetail?.lastName ? (
+                                        <EventSummary />
+                                    ) : (
+                                        <Navigate to="/users/register" />
+                                    )
+                                }
+                            />
+                            <Route
+                                path="ticket-booking/:eventId"
+                                element={
+                                    userDetail?.lastName ? (
+                                        <BookEvents />
                                     ) : (
                                         <Navigate to="/users/register" />
                                     )

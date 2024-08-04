@@ -42,7 +42,7 @@ const DatePickerComponent = ({ date, setSelectedDate }) => {
       />
       <style>
         {`
-           
+
            :root {
             --rmdp-primary-purple: #80164a;
             --rmdp-secondary-purple: #b33973;
@@ -50,7 +50,7 @@ const DatePickerComponent = ({ date, setSelectedDate }) => {
             --rmdp-today-purple: #ff006e;
             --rmdp-hover-purple: #bf4c8a;
             --rmdp-deselect-purple: #cc6699;
-        
+
             --secondary-hue: 0;
             --secondary-saturation: 0%;
             --secondary-lightness: 89.8%;
@@ -58,14 +58,14 @@ const DatePickerComponent = ({ date, setSelectedDate }) => {
             --foreground-saturation: 0%;
             --foreground-lightness: 20%;
         }
-        
+
         .dark {
             --secondary-hue: 0;
             --secondary-saturation: 0%;
             --secondary-lightness: 14.9%;
             --foreground-lightness: 80%;
         }
-        
+
         .custom-date-picker-container .rmdp-wrapper {
             background-color: hsl(
                 var(--secondary-hue),
@@ -76,7 +76,7 @@ const DatePickerComponent = ({ date, setSelectedDate }) => {
         .rmdp-week-day {
             font-size: 1rem;
         }
-        
+
         .custom-input {
             box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
                 rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
@@ -88,12 +88,12 @@ const DatePickerComponent = ({ date, setSelectedDate }) => {
                 var(--secondary-lightness)
             ) !important;
         }
-        
+
         .custom-date-picker-container .rmdp-day {
             transition: 500;
             font-weight: bold;
-            margin: 10px;
-        
+            margin: 4px;
+
             color: hsl(
                 var(--foreground-hue),
                 var(--foreground-saturation),
@@ -106,7 +106,7 @@ const DatePickerComponent = ({ date, setSelectedDate }) => {
         .rmdp-day.rmdp-disabled span {
             color: gray;
         }
-        
+
         .custom-date-picker-container .rmdp-header-values {
             color: hsl(
                 var(--foreground-hue),
@@ -114,7 +114,7 @@ const DatePickerComponent = ({ date, setSelectedDate }) => {
                 var(--foreground-lightness)
             ) !important;
         }
-        
+
         `}
       </style>
     </div>

@@ -138,13 +138,11 @@ const Register = () => {
                         email: email,
                     })
                     .then((res) => {
-                        console.log(res.data);
                         dispatch(setUser(res.data.data));
                         setIsLoading(false);
                     })
                     .catch((err) => console.log(err));
             }
-            console.log(data);
 
             await axios.patch(`${BASE_URL}/client/${client?._id}`, data);
 
