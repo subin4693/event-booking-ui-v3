@@ -26,7 +26,7 @@ const EventCard = ({ image, title, id, date, location }) => {
                     <p>location : {location}</p>
                     <br />
                     <Button>
-                        <Link to="">Book now</Link>
+                        <Link to={`/client/event-summary/${id}`}>Book now</Link>
                     </Button>
                 </CardContent>
             </Card>

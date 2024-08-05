@@ -126,6 +126,26 @@ const App = () => {
                                 }
                             />
                         </Route>
+                        <Route
+                            path="event-summary/:eventId"
+                            element={
+                                client?._id ? (
+                                    <EventSummary />
+                                ) : (
+                                    <Navigate to="/users/register" />
+                                )
+                            }
+                        />
+                        <Route
+                            path="ticket-booking/:eventId"
+                            element={
+                                client?._id ? (
+                                    <BookEvents />
+                                ) : (
+                                    <Navigate to="/users/register" />
+                                )
+                            }
+                        />
                     </Routes>
                     <Routes>
                         <Route
@@ -153,7 +173,7 @@ const App = () => {
                             <Route
                                 path="event-summary/:eventId"
                                 element={
-                                    userDetail?.lastName || client?._id ? (
+                                    userDetail?.lastName ? (
                                         <EventSummary />
                                     ) : (
                                         <Navigate to="/users/register" />
@@ -163,7 +183,7 @@ const App = () => {
                             <Route
                                 path="ticket-booking/:eventId"
                                 element={
-                                    userDetail?.lastName || client?._id ? (
+                                    userDetail?.lastName ? (
                                         <BookEvents />
                                     ) : (
                                         <Navigate to="/users/register" />
