@@ -194,7 +194,7 @@ const CategoryEventCard = ({
                 </p>
             </div>
             <Button>
-                <Link to="#">Book now</Link>
+                <Link to={`/vendor/event-summary/${id}`}>Book now</Link>
             </Button>
         </div>
     );

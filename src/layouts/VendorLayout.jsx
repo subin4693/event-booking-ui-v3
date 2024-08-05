@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 
 function VendorLayout() {
     return (
-        <main className="flex cursor-pointer">
+        <main className="flex cursor-default">
             <VendorSidebar />
 
             <div className="w-full   flex flex-col">
