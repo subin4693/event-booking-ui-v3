@@ -52,7 +52,7 @@ const Dashboard = () => {
         setSelectedCategories((prevSelectedCategories) =>
             prevSelectedCategories.includes(category)
                 ? prevSelectedCategories.filter((cat) => cat !== category)
-                : [...prevSelectedCategories, category]
+                : [...prevSelectedCategories, category],
         );
     };
 
@@ -69,7 +69,7 @@ const Dashboard = () => {
                 Popular Events by Qatar Hub
             </h2>
             <div className="flex gap-10 flex-col md:flex-row">
-                <div className="flex justify-center md:justify-between flex-wrap gap-5 mt-2">
+                <div className="flex justify-center md:justify-start flex-wrap gap-5 mt-2">
                     {!loading ? (
                         getEvents().map(({ item, image }) => {
                             return (
@@ -79,21 +79,24 @@ const Dashboard = () => {
                                     image={item && item?.images}
                                     title={item && item?.name}
                                     date={item.dates.map((date) =>
-                                        formatDate(date)
+                                        formatDate(date),
                                     )}
                                     location={"Doha, Qatar"}
                                 />
                             );
                         })
                     ) : (
-                        <Skeleton className="rounded-2xl h-[250px]" />
+                        <div className="flex  gap-5 mt-5 flex-wrap">
+                            <Skeleton className={"w-[300px] h-[350px] "} />
+                            <Skeleton className={"w-[300px] h-[350px] "} />
+                        </div>
                     )}
                 </div>
             </div>
             <h2 className="text-xl font-semibold mb-4 mt-10">
                 Choose by Category
             </h2>
-            <div className="flex overflow-x-auto mb-3 flex-wrap">
+            <div className="flex overflow-x-auto mb-3">
                 {categories.map((category, index) => (
                     <div
                         key={index}
@@ -148,10 +151,11 @@ const Dashboard = () => {
                         {getRandomEvents().map(({ item, image }) => (
                             <CategoryEventCard
                                 key={item && item?._id}
-                                eventImage={image && item?.images}
+                                id={item && item?._id}
+                                eventImage={item && item?.images}
                                 eventTitle={item && item?.name}
                                 date={item.dates.map((date) =>
-                                    formatDate(date)
+                                    formatDate(date),
                                 )}
                                 place={"Doha, Qatar"}
                                 description={item.description}
@@ -164,21 +168,33 @@ const Dashboard = () => {
     );
 };
 
-const CategoryEventCard = ({ image, eventTitle, date, place, description }) => {
+const CategoryEventCard = ({
+    id,
+    eventImage,
+    eventTitle,
+    date,
+    place,
+    description,
+}) => {
     return (
         <div className="p-4 mb-4 flex items-center justify-between rounded-lg bg-muted shadow-md">
             <img
-                src={`${image && image[0]}`}
-                className="w-24 h-24 rounded-lg object-cover"
+                src={`${eventImage && eventImage[0]}`}
+                className="w-24 h-24 rounded-lg object-cover "
             />
-            <div className="ml-4 flex-1">
-                <h3 className="text-lg font-semibold">{eventTitle}</h3>
-                <p className="text-sm">{date}</p>
-                <p className="text-sm">{place}</p>
-                <p className="text-sm mt-2">{description}</p>
+
+            <div className="ml-4  flex-1">
+                <h3 className=" text-lg font-semibold">Title : {eventTitle}</h3>
+                <p className="text-sm">
+                    Date : {date[0] + " -- " + date[date.length - 1]}
+                </p>
+                <p className="text-sm">Place : {place}</p>
+                <p className="text-sm mt-2 line-clamp-1">
+                    Description : {description}
+                </p>
             </div>
             <Button>
-                <Link to="">Book now</Link>
+                <Link to={`/users/event-summary/${id}`}>Book now</Link>
             </Button>
         </div>
     );

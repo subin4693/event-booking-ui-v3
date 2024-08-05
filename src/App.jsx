@@ -153,7 +153,7 @@ const App = () => {
                             <Route
                                 path="event-summary/:eventId"
                                 element={
-                                    userDetail?.lastName ? (
+                                    userDetail?.lastName || client?._id ? (
                                         <EventSummary />
                                     ) : (
                                         <Navigate to="/users/register" />
@@ -163,7 +163,7 @@ const App = () => {
                             <Route
                                 path="ticket-booking/:eventId"
                                 element={
-                                    userDetail?.lastName ? (
+                                    userDetail?.lastName || client?._id ? (
                                         <BookEvents />
                                     ) : (
                                         <Navigate to="/users/register" />
