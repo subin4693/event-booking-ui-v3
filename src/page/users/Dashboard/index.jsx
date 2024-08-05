@@ -52,7 +52,7 @@ const Dashboard = () => {
         setSelectedCategories((prevSelectedCategories) =>
             prevSelectedCategories.includes(category)
                 ? prevSelectedCategories.filter((cat) => cat !== category)
-                : [...prevSelectedCategories, category]
+                : [...prevSelectedCategories, category],
         );
     };
 
@@ -79,7 +79,7 @@ const Dashboard = () => {
                                     image={item && item?.images}
                                     title={item && item?.name}
                                     date={item.dates.map((date) =>
-                                        formatDate(date)
+                                        formatDate(date),
                                     )}
                                     location={"Doha, Qatar"}
                                 />
@@ -151,10 +151,11 @@ const Dashboard = () => {
                         {getRandomEvents().map(({ item, image }) => (
                             <CategoryEventCard
                                 key={item && item?._id}
+                                id={item && item?._id}
                                 eventImage={item && item?.images}
                                 eventTitle={item && item?.name}
                                 date={item.dates.map((date) =>
-                                    formatDate(date)
+                                    formatDate(date),
                                 )}
                                 place={"Doha, Qatar"}
                                 description={item.description}
@@ -168,6 +169,7 @@ const Dashboard = () => {
 };
 
 const CategoryEventCard = ({
+    id,
     eventImage,
     eventTitle,
     date,
@@ -192,7 +194,7 @@ const CategoryEventCard = ({
                 </p>
             </div>
             <Button>
-                <Link to="">Book now</Link>
+                <Link to={`/users/event-summary/${id}`}>Book now</Link>
             </Button>
         </div>
     );
