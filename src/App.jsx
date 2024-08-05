@@ -11,7 +11,7 @@ import VendorProfile from "@/page/vendor/Profile";
 import VendorDashboard from "@/page/vendor/Dashboard";
 import VendorEventSummary from "@/page/vendor/Event-Summary";
 
-import VendorBookEvents from "@/page/vendor/Book-Events";
+import VendorBookEvents from "./page/vendor/Book-Events";
 
 import VendorEvents from "@/page/vendor/Events";
 import Register from "@/page/vendor/Register";
@@ -35,10 +35,10 @@ import Signup from "./page/auth/Signup";
 import Signin from "./page/auth/Signin";
 import { Toaster } from "@/components/ui/toaster";
 import { useSelector } from "react-redux";
-import EditEvents from "@/page/users/Edit-Events";
+import EditEvents from "./page/users/Edit-Events";
 import VendarUpdate from "@/page/vendor/RegisterUpdate";
 
-import EventSummary from "@/page/users/Event-Summary";
+import EventSummary from "./page/users/Event-Summary";
 
 const App = () => {
     const { user } = useSelector((state) => state.user);

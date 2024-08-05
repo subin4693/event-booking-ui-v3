@@ -49,7 +49,7 @@ const EventSummary = () => {
                             </div>
                         </div>{" "}
                         <Button asChild>
-                            <Link to={`/users/ticket-booking/${eventId}`}>
+                            <Link to={`/vendor/ticket-booking/${eventId}`}>
                                 Book now
                             </Link>
                         </Button>
