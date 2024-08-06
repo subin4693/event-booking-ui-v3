@@ -13,6 +13,8 @@ const TicketPriceDialog = ({
     handleConfirm,
     setPublishLoading,
     eventId,
+    typeOne,
+    typeTwo,
 }) => {
     const { toast } = useToast();
     return (
@@ -29,7 +31,7 @@ const TicketPriceDialog = ({
                                     title: "Provide a valid category",
                                 });
                             const isOk = categorys.every(
-                                (cat) => cat.category.trim().length > 0
+                                (cat) => cat.category.trim().length > 0,
                             );
 
                             if (!isOk)
@@ -41,7 +43,7 @@ const TicketPriceDialog = ({
                             return handleConfirm(
                                 eventId,
                                 setPublishLoading,
-                                categorys
+                                categorys,
                             );
                             1;
                         }}
@@ -107,7 +109,7 @@ const TicketPriceDialog = ({
                                     onClick={() => {
                                         const newCategorys = [...categorys];
                                         const newval = newCategorys.filter(
-                                            (cat, ind) => index !== ind
+                                            (cat, ind) => index !== ind,
                                         );
                                         setCategorys(newval);
                                     }}

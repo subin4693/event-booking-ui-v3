@@ -95,7 +95,7 @@ const EventCard = ({
                                         onClick={() =>
                                             handleCancel(
                                                 eventId,
-                                                setCancelLoading
+                                                setCancelLoading,
                                             )
                                         }
                                         variant="destructive"
@@ -153,6 +153,8 @@ const EventCard = ({
                 showDialog={showDialog}
                 handleConfirm={handleConfirm}
                 setPublishLoading={setPublishLoading}
+                typeOne={typeOne}
+                typeTwo={typeTwo}
             />
         </div>
     );
