@@ -78,8 +78,20 @@ const Signin = () => {
             setLoading(false);
         }
     };
-    const handleAuthWithGoogle = () => {};
-    const handleAuthWithFacebook = () => {};
+    const handleAuthWithGoogle = () => {
+        toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: "Google authendication is under development",
+        });
+    };
+    const handleAuthWithFacebook = () => {
+        toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: "Facebook authendication is under development",
+        });
+    };
 
     return (
         <div className="bg-gradient-to-l from-gray-600 via-gray-300 dark:from-ston-900 dark:via-gray-800 to-background min-h-screen flex items-center justify-center cursor-default">
